@@ -40,6 +40,39 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+app.post('/jobs/:id/apply', (req, res) => {
+    //console.log('req.body', req.body);
+    const { name, email, phone, dob, position, coverletter } = req.body;
+
+    // console.log('New Application', {name, email, phone, dob, position, coverletter});
+
+    const id = req.params.id;
+    const matchedJob = JOBS.find(job => job.id.toString() === id);
+  
+    const mailOptions = {
+      from: process.env.EMAIL_ID,
+      to: process.env.EMAIL_ID,
+      subject: `New Application for ${matchedJob.title}`,
+      html: `
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Date of Birth:</strong> ${dob}</p>
+        <p><strong>Cover Letter:</strong> ${coverletter}</p>
+      `
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        res.status(500).send('Error sending email');
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.status(200).send('Email sent successfully');
+      }
+    });
+  });
+
 
 
 
