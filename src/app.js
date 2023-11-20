@@ -18,6 +18,16 @@ app.get('/', (req, res) => {
     res.render('index', { jobs: JOBS}); // Render the template
 });
 
+app.get('/jobs/:id', (req, res) => {
+    const id = req.params.id;
+    const matchedJob = JOBS.find(job => job.id.toString() === id);
+    res.render('job', { job: matchedJob});
+})
+
+app.post('/jobs/:id/apply', (req,res) => {
+    res.send('Got the application!')
+})
+
 const port = process.env.PORT || 3000; 
 
 app.listen(port, () => {console.log(`Server running on https://localhost:${port}`)})
